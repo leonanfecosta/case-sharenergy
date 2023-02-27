@@ -1,0 +1,367 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Users API",
+    "description": "This is a simple API for managing users",
+    "contact": {
+      "name": "Leonan Costa",
+      "email": "leoananfecosta@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "basePath": "/",
+
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": ["Login"],
+        "description": "Login to the system and get a token only if the user exists and the password is correct",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              },
+              "example": {
+                "username": "desafiosharenergy",
+                "password": "sh@r3n3rgy"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                },
+                "example": {
+                  "username": "desafiosharenergy",
+                  "password": "92305f21d8281ac002904977d84c0b2a",
+                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRlc2FmaW9zaGFyZW5lcmd5IiwicGFzc3dvcmQiOiI5MjMwNWYyMWQ4MjgxYWMwMDI5MDQ5NzdkODRjMGIyYSIsImlhdCI6MTY3MzA1Njg4NSwiZXhwIjoxNjczNjYxNjg1fQ.5UbpiWDiSg91-aKXyvIthPBe2io3PARJgf8-FseRvgM"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "tags": ["Users"],
+        "description": "Create a new user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "example": {
+                "name": "Leonan Costa",
+                "email": "leonan@teste.com",
+                "phone": "(11) 99999-9999",
+                "address": "Rua dos Testes, 123",
+                "cpf": "123.456.789-00"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserReponse"
+                },
+                "example": {
+                  "_id": "5f9f1b5b9b9b9b9b9b9b9b9b",
+                  "name": "Leonan Costa",
+                  "email": "leonan@teste.com",
+                  "phone": "(11) 99999-9999",
+                  "address": "Rua dos Testes, 123",
+                  "cpf": "123.456.789-00"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Wrong types or missing fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "error": "Name must be a string"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email or CPF already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "error": "Entity already exists"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Users"],
+        "description": "Get all users",
+        "responses": {
+          "200": {
+            "description:": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserReponse"
+                  }
+                },
+                "example": [
+                  {
+                    "_id": "5f9f1b5b9b9b9b9b9b9b9b9b",
+                    "name": "Leonan Costa",
+                    "email": "leonan@teste.com",
+                    "phone": "(11) 99999-9999",
+                    "address": "Rua dos Testes, 123",
+                    "cpf": "123.456.789-00"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "put": {
+        "tags": ["Users"],
+        "description": "Update a user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the user to update",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "example": {
+                "name": "Leonan Costa",
+                "email": "leonan@teste.com",
+                "phone": "(11) 99999-9999",
+                "address": "Rua dos Testes, 123",
+                "cpf": "123.456.789-00"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserReponse"
+                },
+                "example": {
+                  "_id": "5f9f1b5b9b9b9b9b9b9b9b9b",
+                  "name": "Leonan Costa",
+                  "email": "leonan@teste.com",
+                  "phone": "(11) 99999-9999",
+                  "address": "Rua dos Testes, 123",
+                  "cpf": "123.456.789-00"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "400": {
+            "description": "Wrong types or missing fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "error": "Name must be a string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Users"],
+        "description": "Delete a user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the user to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserReponse"
+                },
+                "example": {
+                  "_id": "5f9f1b5b9b9b9b9b9b9b9b9b",
+                  "name": "Leonan Costa",
+                  "email": "leonan@teste.com",
+                  "phone": "(11) 99999-9999",
+                  "address": "Rua dos Testes, 123",
+                  "cpf": "123.456.789-00"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Login": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Username to use for login"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password to use for login"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Username to use for login"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password to use for login"
+          },
+          "token": {
+            "type": "string",
+            "description": "Token to use for authentication"
+          }
+        }
+      },
+      "User": {
+        "type:": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the user to be created or updated, must be at least 3 characters long",
+            "minLength": 3
+          },
+          "email": {
+            "type": "string",
+            "description": "Email of the user to be created or updated, must be a valid email and unique",
+            "format": "email"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone of the user to be created or updated, must be a valid phone number",
+            "format": "phone"
+          },
+          "address": {
+            "type": "string",
+            "description": "Address of the user to be created or updated, must be at least 5 characters long",
+            "minLength": 5
+          },
+          "cpf": {
+            "type": "string",
+            "description": "CPF of the user to be created or updated, must be a valid CPF and unique",
+            "format": "cpf"
+          }
+        }
+      },
+      "UserReponse": {
+        "type:": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "ID of the user"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the user"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email of the user"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone of the user"
+          },
+          "address": {
+            "type": "string",
+            "description": "Address of the user"
+          },
+          "cpf": {
+            "type": "string",
+            "description": "CPF of the user"
+          }
+        }
+      }
+    }
+  }
+}
