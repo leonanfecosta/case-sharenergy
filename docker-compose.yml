@@ -1,0 +1,70 @@
+version: '3.9'
+services:
+  frontend:
+    platform: linux/x86_64 #  para quem tem MAC
+    container_name: desafio_sharenergy_frontend
+    build: ./frontend
+    ports:
+      - 3000:3000
+    working_dir: /app/frontend
+    volumes:
+      - ./frontend:/app/frontend
+    tty: true
+    stdin_open: true
+    # command: bash
+    restart: always
+    depends_on:
+      - backend
+    networks:
+      - virtual_wan_Front-to-Back
+
+  backend:
+    platform: linux/x86_64 # para o MAC
+    container_name: desafio_sharenergy_backend
+    build: ./backend
+    working_dir: /app/backend
+    volumes:
+      - ./backend:/app/backend
+    tty: true
+    stdin_open: true
+    command: npm run dev
+    restart: always
+    depends_on:
+      - mongodb
+    ports:
+      - 3001:3001
+    environment:
+      MONGO_URI: mongodb://mongodb:27017/sharenergy
+    networks:
+      - virtual_wan_Front-to-Back
+      - virtual_lan_Back-to-DB
+
+  mongodb:
+    image: mongo:5.0.7
+    platform: linux/x86_64 # para o MAC
+    container_name: desafio_sharenergy_db
+    restart: 'always'
+    ports:
+      - 27017:27017
+    volumes:
+      - ./:/app
+    networks:
+      - virtual_lan_Back-to-DB
+    cap_add:
+      - SYS_NICE  
+
+networks:
+  virtual_wan_Front-to-Back: {}
+  virtual_lan_Back-to-DB: {}
+  default:
+    name: virtual_lan_Back-to-DB
+
+# As chaves `tty`, `stdin_open` e `command` fazem com que o container fique
+# rodando em segundo plano, bem como tornam possível o uso do comando
+# `docker attach`, já deixando o terminal atual acoplado ao container, direto
+# no bash. Apesar disso, utilizar o attach mais de uma vez irá replicar o
+# terminal, portanto é melhor utilizar o comando `docker exec`.
+
+# A renomeação da rede padrão é feita pois caso contrário o nome da rede será
+# o nome do diretório onde o arquivo atual se encontra, o que pode dificultar
+# a listagem individual.
